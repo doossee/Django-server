@@ -26,7 +26,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ["DEBUG"]
 
-ALLOWED_HOSTS = ['https://django-server-production-8be3.up.railway.app/',]
+ALLOWED_HOSTS = ['https://django-server-production-8be3.up.railway.app',]
 
 # FORM SUBMISSION
 # Comment out the following line and place your railway URL, and your production URL in the array.
