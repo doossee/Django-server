@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from .yasg import urlpatterns as doc_urls
 
 
 urlpatterns = [
@@ -24,3 +25,5 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('api/v1/', include('storage.urls')),
 ]
+
+urlpatterns += doc_urls
