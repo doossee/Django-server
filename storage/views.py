@@ -12,12 +12,12 @@ class ProductAPIViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsAdminUser]
    
-    @action(methods=['post'], detail=False)
-    def create_many(self, request):
-        serializer = self.get_serializer(data=request.data, many=True)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        return Response(serializer.data)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
 
 
 class ClientAPIViewSet(ModelViewSet):
