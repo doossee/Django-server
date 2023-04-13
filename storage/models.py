@@ -12,7 +12,7 @@ class Product(models.Model):
 
     name = models.CharField("Название товара", max_length=150)
     type = models.CharField("Тип товара", max_length=6, choices=TypeChoices.choices)
-    balance = models.DecimalField("Остаток товара", max_digits=9, decimal_places=2)
+    balance = models.PositiveIntegerField("Остаток товара")
 
     def __str__(self):
         return self.name
@@ -47,7 +47,7 @@ class Advent(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, verbose_name="Товар"
         )
-    amount = models.PositiveSmallIntegerField("Количество товара")
+    amount = models.PositiveIntegerField("Количество товара")
     date_of = models.DateField("Дата прихода", auto_now_add=True)
 
     def save(self):
@@ -76,7 +76,7 @@ class Consumption(models.Model):
         Product, on_delete=models.PROTECT, verbose_name="Товар"
     )
     price = models.DecimalField("Цена товара", max_digits=9, decimal_places=2)
-    amount = models.PositiveSmallIntegerField("Количество товара")
+    amount = models.PositiveIntegerField("Количество товара")
     sum = models.DecimalField("Общая сумма", max_digits=9, decimal_places=2, editable=False)
     date_of = models.DateField("Дата расхода", auto_now_add=True)
 

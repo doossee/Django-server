@@ -1,2 +1,5 @@
 env
 mysite/dsettings.py
+mysite/__pycache__
+storage/__pycache__
+db.sqlite3
