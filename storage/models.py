@@ -44,21 +44,16 @@ class Advent(models.Model):
 
     """Приход"""
     
-    product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, verbose_name="Товар"
+    products = models.ForeignKey(
+        Product, 
+        on_delete=models.PROTECT, 
+        verbose_name="Товар"
         )
     amount = models.PositiveIntegerField("Количество товара")
     date_of = models.DateField("Дата прихода", auto_now_add=True)
 
-    def save(self):
-        if not self.id:
-            temp = self.product
-            temp.balance += self.amount
-            temp.save()
-        super(Advent, self).save()
-
     def __str__(self):
-        return f"{self.product}"
+        return f"{self.products}"
 
     class Meta:
         verbose_name = "Приход"
@@ -70,29 +65,24 @@ class Consumption(models.Model):
     """Расход"""
 
     client = models.ForeignKey(
-        Client, on_delete=models.PROTECT, verbose_name="Клиент"
+        Client, 
+        related_name='client', 
+        on_delete=models.PROTECT, 
+        verbose_name="Клиент"
         )
-    product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, verbose_name="Товар"
+    products = models.ForeignKey(
+        Product, 
+        related_name='products', 
+        on_delete=models.PROTECT, 
+        verbose_name="Продукты"
     )
     price = models.DecimalField("Цена товара", max_digits=9, decimal_places=2)
     amount = models.PositiveIntegerField("Количество товара")
     sum = models.DecimalField("Общая сумма", max_digits=9, decimal_places=2, editable=False)
     date_of = models.DateField("Дата расхода", auto_now_add=True)
 
-    def save(self):
-        if not self.id:
-            temp = self.product
-            if temp.balance >= self.amount > 0 :
-                self.sum = self.price * self.amount
-                temp.balance -= self.amount
-                temp.save()
-                self.client.debt += self.sum
-                self.client.save()
-        super(Consumption, self).save()
-
     def __str__(self):
-        return f"{self.client} - {self.product}"
+        return f"{self.client} - {self.products}"
     
     class Meta:
         verbose_name = "Расход"
@@ -103,15 +93,13 @@ class Profit(models.Model):
     
     """Прибыль"""
 
-    client = models.ForeignKey(Client, on_delete=models.PROTECT, verbose_name="Клиент")
+    client = models.ForeignKey(
+        Client, 
+        on_delete=models.PROTECT, 
+        verbose_name="Клиент"
+    )
     sum_of_profit = models.DecimalField("Сумма прибыли", max_digits=9, decimal_places=2)
     date_of = models.DateField("Дата прибыли", auto_now_add=True)
-
-    def save(self):
-        if not self.id:
-            self.client.debt -= self.sum_of_minus
-            self.client.save()
-        super(Profit, self).save()
 
     def __str__(self):
         return f"{self.client}"

@@ -39,14 +39,12 @@ class ClientAPIViewSet(ModelViewSet):
         serializer.save()
 
 
-
 class AdventAPIViewSet(ModelViewSet):
 
     queryset = Advent.objects.all()
     serializer_class = AdventSerializer
-    depth = 1
     permission_classes = [IsAdminUser]
-
+    
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
@@ -56,15 +54,13 @@ class AdventAPIViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
-
-
+        
 
 class ConsumptionAPIViewSet(ModelViewSet):
 
     queryset = Consumption.objects.all()
     serializer_class = ConsumptionSerializer
     permission_classes = [IsAdminUser]
-    depth = 1
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=True)
@@ -75,7 +71,6 @@ class ConsumptionAPIViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
-
 
 
 class ProfitAPIViewSet(ModelViewSet):
@@ -83,7 +78,6 @@ class ProfitAPIViewSet(ModelViewSet):
     queryset = Profit.objects.all()
     serializer_class = ProfitSerializer
     permission_classes = [IsAdminUser]
-    depth = 1
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=True)
@@ -91,10 +85,6 @@ class ProfitAPIViewSet(ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+    
     def perform_create(self, serializer):
         serializer.save()
-
-
-
-   
