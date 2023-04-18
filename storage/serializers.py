@@ -13,13 +13,13 @@ from .models import (
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name', 'type', 'balance',)
+        fields = '__all__'
 
 
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ('name', 'status', 'description', 'phone_number', 'debt',)
+        fields = '__all__'
 
 
 class SingleAdventSerializer(serializers.ModelSerializer):
@@ -27,14 +27,14 @@ class SingleAdventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SingleAdvent
-        fields = ('product', 'amount',)
+        fields = '__all__'
 
 class AdventListSerializer(serializers.ModelSerializer):
     advent = SingleAdventSerializer(many=True)
 
     class Meta:
         model = AdventList
-        fields = ('advent',)
+        fields = '__all__'
 
     def create(self, validated_data):
         advents_data = validated_data.pop('advent')
@@ -50,7 +50,7 @@ class SingleConsumptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SingleConsumption
-        fields = ('product', 'amount', 'price', 'cost',)
+        fields = '__all__'
 
 class ConsumptionListSerializer(serializers.ModelSerializer):
     client = ClientSerializer
@@ -58,7 +58,7 @@ class ConsumptionListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = ConsumptionList
-        fields = ('client', 'consumption', 'total_cost',)
+        fields = '__all__'
 
     def create(self, validated_data):
         consumptions_data = validated_data.pop('consumption')
