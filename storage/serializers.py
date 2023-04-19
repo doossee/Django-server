@@ -23,6 +23,14 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 class SingleAdventSerializer(serializers.ModelSerializer):
+    product = ProductSerializer
+
+    class Meta:
+        model = SingleAdvent
+        fields = '__all__'
+
+
+class SingleAdventGetSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
 
     class Meta:
@@ -39,7 +47,7 @@ class AdventListSerializer(serializers.ModelSerializer):
 
 
 class AdventListGetSerializer(serializers.ModelSerializer):
-    advent = SingleAdventSerializer(many=True)
+    advent = SingleAdventGetSerializer(many=True)
 
     class Meta:
         model = AdventList
@@ -67,6 +75,14 @@ class AdventListGetSerializer(serializers.ModelSerializer):
 
 
 class SingleConsumptionSerializer(serializers.ModelSerializer):
+    product = ProductSerializer
+
+    class Meta:
+        model = SingleConsumption
+        fields = '__all__'
+
+
+class SingleConsumptionGetSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
 
     class Meta:
@@ -85,7 +101,7 @@ class ConsumptionListSerializer(serializers.ModelSerializer):
 
 class ConsumptionListGetSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
-    consumption = SingleConsumptionSerializer(many=True)
+    consumption = SingleConsumptionGetSerializer(many=True)
 
     class Meta:
         model = ConsumptionList

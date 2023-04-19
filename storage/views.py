@@ -30,9 +30,9 @@ class AdventListAPIViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return AdventListGetSerializer
-        return AdventListSerializer
+        if not self.request.method == "GET":
+            return AdventListSerializer
+        return AdventListGetSerializer
     
 
 class ConsumptionListAPIViewSet(ModelViewSet):
@@ -41,9 +41,9 @@ class ConsumptionListAPIViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return ConsumptionListGetSerializer
-        return ConsumptionListSerializer
+        if not self.request.method == "GET":
+            return ConsumptionListSerializer
+        return ConsumptionListGetSerializer
 
 
 class ProfitAPIViewSet(ModelViewSet):
@@ -52,7 +52,7 @@ class ProfitAPIViewSet(ModelViewSet):
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return ProfitGetSerializer
-        return ProfitSerializer
+        if not self.request.method == "GET":
+            return ProfitSerializer
+        return ProfitGetSerializer
 
