@@ -51,6 +51,24 @@ class SingleConsumptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SingleConsumption
         fields = '__all__'
+    
+    def populate_product(self, product_data):
+        product_serializer = ProductSerializer(data=product_data)
+        product_serializer.is_valid(raise_exception=True)
+        product = product_serializer.populate(product_serializer.validated_data)
+        return product
+
+    def populate(self, validated_data):
+        product_data = validated_data.pop('product')
+        product = self.populate_product(product_data)
+        instance = self.Meta.model(product=product, **validated_data)
+        instance.save()
+        return instance
+
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return self.populate(validated_data)
 
 
 class ConsumptionListSerializer(serializers.ModelSerializer):
