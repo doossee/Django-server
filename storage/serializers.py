@@ -29,7 +29,7 @@ class SingleAdventSerializer(serializers.ModelSerializer):
         model = SingleAdvent
         fields = '__all__'
 
-class AdventListSerializer(serializers.ModelSerializer):
+class AdventListGetSerializer(serializers.ModelSerializer):
     advent = SingleAdventSerializer(many=True)
 
     class Meta:
@@ -57,6 +57,14 @@ class AdventListSerializer(serializers.ModelSerializer):
         instance.save()
 
 
+class AdventListSerializer(serializers.ModelSerializer):
+    advent = SingleAdventSerializer(many=True)
+
+    class Meta:
+        model = AdventList
+        fields = '__all__'
+
+
 class SingleConsumptionSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
 
@@ -65,7 +73,7 @@ class SingleConsumptionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ConsumptionListSerializer(serializers.ModelSerializer):
+class ConsumptionListGetSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
     consumption = SingleConsumptionSerializer(many=True)
 
@@ -102,9 +110,14 @@ class ConsumptionListSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return self.populate(validated_data)
+    
+
+class ConsumptionListSerializer(serializers.ModelSerializer):
+    client = ClientSerializer()
+    consumption = SingleConsumptionSerializer(many=True)
 
 
-class ProfitSerializer(serializers.ModelSerializer):
+class ProfitGetSerializer(serializers.ModelSerializer):
     
     client = ClientSerializer()
     class Meta:
@@ -128,4 +141,12 @@ class ProfitSerializer(serializers.ModelSerializer):
         instance = self.Meta.model(**validated_data)
         instance.save()
         return self.populate(validated_data)
+    
+
+class ProfitSerializer(serializers.ModelSerializer):
+    
+    client = ClientSerializer()
+    class Meta:
+        model = Profit
+        fields = '__all__'
 

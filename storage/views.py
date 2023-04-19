@@ -3,8 +3,13 @@ from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 from .models import Product, Client, AdventList, ConsumptionList, Profit
-from .serializers import ProductSerializer, ClientSerializer, AdventListSerializer, ConsumptionListSerializer, ProfitSerializer
-
+from .serializers import (
+    ProductSerializer, 
+    ClientSerializer,
+    AdventListSerializer, AdventListGetSerializer,
+    ConsumptionListSerializer, ConsumptionListGetSerializer,
+    ProfitSerializer, ProfitGetSerializer
+)
 class ProductAPIViewSet(ModelViewSet):
     
     queryset = Product.objects.all()
@@ -22,49 +27,32 @@ class ClientAPIViewSet(ModelViewSet):
 class AdventListAPIViewSet(ModelViewSet):
 
     queryset = AdventList.objects.all()
-    serializer_class = AdventListSerializer
     permission_classes = [IsAdminUser]
-    
-    """def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def perform_create(self, serializer):
-        serializer.save()"""
-        
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return AdventListGetSerializer
+        return AdventListSerializer
+    
 
 class ConsumptionListAPIViewSet(ModelViewSet):
 
     queryset = ConsumptionList.objects.all()
-    serializer_class = ConsumptionListSerializer
     permission_classes = [IsAdminUser]
 
-    """def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        serializer.save()"""
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ConsumptionListGetSerializer
+        return ConsumptionListSerializer
 
 
 class ProfitAPIViewSet(ModelViewSet):
 
     queryset = Profit.objects.all()
-    serializer_class = ProfitSerializer
     permission_classes = [IsAdminUser]
 
-    """def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, many=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    
-    def perform_create(self, serializer):
-        serializer.save()"""
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ProfitGetSerializer
+        return ProfitSerializer
+
