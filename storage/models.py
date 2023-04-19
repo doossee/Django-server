@@ -81,7 +81,7 @@ class AdventList(models.Model):
     class Meta:
         verbose_name = "Список приходов"
         verbose_name_plural = "Списки приходов"
-        ordering = ['-created_at']
+        ordering = ['-id', '-created_at']
 
 
 class SingleConsumption(models.Model):
@@ -141,7 +141,7 @@ class ConsumptionList(models.Model):
     class Meta:
         verbose_name = "Список расходов"
         verbose_name_plural = "Списки расходов"
-        ordering = ['-created_at']
+        ordering = ['-id', '-created_at']
 
     
 class Profit(models.Model):
@@ -168,5 +168,5 @@ class Profit(models.Model):
     class Meta:
         verbose_name = "Прибыль"
         verbose_name_plural = "Прибыли"
-        ordering = ['-created_at']
+        ordering = ['-id', '-created_at']
 
