@@ -23,7 +23,7 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 class SingleAdventSerializer(serializers.ModelSerializer):
-    product = ProductSerializer
+    product = ProductSerializer()
 
     class Meta:
         model = SingleAdvent
@@ -36,17 +36,29 @@ class AdventListSerializer(serializers.ModelSerializer):
         model = AdventList
         fields = '__all__'
 
+    def populate_single_advent(self, single_advent_data):
+        single_advent_serializer = SingleAdventSerializer(data=single_advent_data)
+        single_advent_serializer.is_valid(raise_exception=True)
+        single_advent = single_advent_serializer.save()
+        return single_advent
+
+    def populate(self, validated_data):
+        single_advent_data = validated_data.pop('advent')
+        single_advent_list = []
+        for single_advent in single_advent_data:
+            single_advent_object = self.populate_single_advent(single_advent)
+            single_advent_list.append(single_advent_object)
+        instance = self.Meta.model(advent=single_advent_list, **validated_data)
+        instance.save()
+        return instance
+
     def create(self, validated_data):
-        advents_data = validated_data.pop('advent')
-        advent_list = AdventList.objects.create(**validated_data)
-        for advent_data in advents_data:
-            advent, created = SingleAdvent.objects.get_or_create(**advent_data)
-            advent_list.advent.add(advent)
-        return advent_list
+        instance = self.Meta.model(**validated_data)
+        instance.save()
 
 
 class SingleConsumptionSerializer(serializers.ModelSerializer):
-    product = ProductSerializer
+    product = ProductSerializer()
 
     class Meta:
         model = SingleConsumption
@@ -112,5 +124,22 @@ class ProfitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profit
         fields = '__all__'
+    
+    def populate_client(self, client_data):
+        client_serializer = ClientSerializer(data=client_data)
+        client_serializer.is_valid(raise_exception=True)
+        client = client_serializer.save()
+        return client
 
+    def populate(self, validated_data):
+        client_data = validated_data.pop('client')
+        client = self.populate_client(client_data)
+        instance = self.Meta.model(client=client, **validated_data)
+        instance.save()
+        return instance
+
+    def create(self, validated_data):
+        instance = self.Meta.model(**validated_data)
+        instance.save()
+        return self.populate(validated_data)
 
