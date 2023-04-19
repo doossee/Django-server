@@ -20,6 +20,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+        ordering = ['id', 'name']
 
 
 class Client(models.Model):
@@ -38,6 +39,7 @@ class Client(models.Model):
     class Meta:
         verbose_name = "Клиент"
         verbose_name_plural = "Клиенты"
+        ordering = ['id', 'ordering']
 
 
 class SingleAdvent(models.Model):
@@ -63,6 +65,7 @@ class SingleAdvent(models.Model):
     class Meta:
         verbose_name = "Приход"
         verbose_name_plural = "Приходы"
+        ordering = ['id']
 
 
 class AdventList(models.Model):
@@ -78,6 +81,7 @@ class AdventList(models.Model):
     class Meta:
         verbose_name = "Список приходов"
         verbose_name_plural = "Списки приходов"
+        ordering = ['-created_at']
 
 
 class SingleConsumption(models.Model):
@@ -107,6 +111,7 @@ class SingleConsumption(models.Model):
     class Meta:
         verbose_name = "Расход"
         verbose_name_plural = "Расходы"
+        ordering = ['id']
 
 
 class ConsumptionList(models.Model):
@@ -137,6 +142,7 @@ class ConsumptionList(models.Model):
     class Meta:
         verbose_name = "Список расходов"
         verbose_name_plural = "Списки расходов"
+        ordering = ['-created_at']
 
     
 class Profit(models.Model):
@@ -163,4 +169,5 @@ class Profit(models.Model):
     class Meta:
         verbose_name = "Прибыль"
         verbose_name_plural = "Прибыли"
+        ordering = ['-created_at']
 
