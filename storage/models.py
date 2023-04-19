@@ -103,9 +103,8 @@ class SingleConsumption(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.cost = self.amount * self.price
-            if self.product.balance >= self.amount:
-                self.product.balance -= self.amount
-                self.product.save()
+            self.product.balance -= self.amount
+            self.product.save()
         super(SingleConsumption, self).save(*args, **kwargs)
     
     class Meta:
