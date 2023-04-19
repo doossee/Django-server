@@ -116,6 +116,10 @@ class ConsumptionListSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
     consumption = SingleConsumptionSerializer(many=True)
 
+    class Meta:
+        model = ConsumptionList
+        fields = '__all__'
+
 
 class ProfitGetSerializer(serializers.ModelSerializer):
     
