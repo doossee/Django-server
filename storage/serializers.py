@@ -91,31 +91,43 @@ class ConsumptionListSerializer(serializers.ModelSerializer):
         model = ConsumptionList
         fields = '__all__'
 
-    def populate_client(self, client_data):
-        client_serializer = ClientSerializer(data=client_data)
-        client_serializer.is_valid(raise_exception=True)
-        client = client_serializer.populate(client_serializer.validated_data)
-        return client
-
-    def populate_consumption(self, consumption_data):
-        consumption_serializer = SingleConsumptionSerializer(data=consumption_data)
-        consumption_serializer.is_valid(raise_exception=True)
-        consumption = consumption_serializer.populate(consumption_serializer.validated_data)
-        return consumption
-
-    def populate(self, validated_data):
-        client_data = validated_data.pop('client')
-        consumption_data = validated_data.pop('consumption')
-        client = self.populate_client(client_data)
-        consumption = [self.populate_consumption(data) for data in consumption_data]
-        consumption_list = ConsumptionList.objects.create(client=client, **validated_data)
-        consumption_list.consumption.set(consumption)
-        return consumption_list
-
-    def create(self, validated_data):
-        instance = self.Meta.model(**validated_data)
-        instance.save()
-        return self.populate(validated_data)
+    class ConsumptionListSerializer(serializers.ModelSerializer):
+        client = ClientSerializer()
+        consumption = SingleConsumptionSerializer(many=True)
+    
+        class Meta:
+            model = ConsumptionList
+            fields = '__all__'
+    
+        def populate_single_consumption(self, single_consumption_data):
+            single_consumption_serializer = SingleConsumptionSerializer(data=single_consumption_data)
+            single_consumption_serializer.is_valid(raise_exception=True)
+            single_consumption = single_consumption_serializer.save()
+            return single_consumption
+    
+        def populate_client(self, client_data):
+            client_serializer = ClientSerializer(data=client_data)
+            client_serializer.is_valid(raise_exception=True)
+            client = client_serializer.save()
+            return client
+    
+        def populate(self, validated_data):
+            client_data = validated_data.pop('client')
+            client = self.populate_client(client_data)
+    
+            single_consumption_data = validated_data.pop('consumption')
+            single_consumption_list = []
+            for single_consumption in single_consumption_data:
+                single_consumption_object = self.populate_single_consumption(single_consumption)
+                single_consumption_list.append(single_consumption_object)
+            instance = self.Meta.model(client=client, consumption=single_consumption_list, **validated_data)
+            instance.save()
+            return instance
+    
+        def create(self, validated_data):
+            instance = self.Meta.model(**validated_data)
+            instance.save()
+            return self.populate(validated_data)
 
 
 class ProfitSerializer(serializers.ModelSerializer):
