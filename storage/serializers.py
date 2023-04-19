@@ -106,7 +106,7 @@ class ConsumptionListSerializer(serializers.ModelSerializer):
 
 class ProfitSerializer(serializers.ModelSerializer):
     
-    client = ClientSerializer
+    client = ClientSerializer()
     class Meta:
         model = Profit
         fields = '__all__'
