@@ -2,10 +2,8 @@ from rest_framework import serializers
 from .models import (
     Product,
     Client,
-    SingleAdvent,
-    AdventList,
-    SingleConsumption,
-    ConsumptionList,
+    Advent, AdventOrder,
+    Consumption, ConsumptionOrder,
     Profit
 )
 
@@ -22,39 +20,49 @@ class ClientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SingleAdventSerializer(serializers.ModelSerializer):
+
+
+class AdventSerializer(serializers.ModelSerializer):
     product = ProductSerializer
 
     class Meta:
-        model = SingleAdvent
+        model = Advent
         fields = '__all__'
 
 
-class SingleAdventGetSerializer(serializers.ModelSerializer):
+class AdventGetSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
 
     class Meta:
-        model = SingleAdvent
+        model = Advent
         fields = '__all__'
 
 
-class AdventListSerializer(serializers.ModelSerializer):
-    advent = SingleAdventSerializer(many=True)
+class AdventOrderSerializer(serializers.ModelSerializer):
+    advents = AdventSerializer(many=True)
 
     class Meta:
-        model = AdventList
+        model = AdventOrder
         fields = '__all__'
+    
+    def create(self, validated_data):
+        advents_data = validated_data.pop('advents')
+        advent_order = AdventOrder.objects.create(**validated_data)
+        for advent_data in advents_data:
+            advent, created = Advent.objects.get_or_create(**advent_data)
+            advent_order.advents.add(advent)
+        return advent_order
 
 
-class AdventListGetSerializer(serializers.ModelSerializer):
-    advent = SingleAdventGetSerializer(many=True)
+class AdventOrderGetSerializer(serializers.ModelSerializer):
+    advents = AdventGetSerializer(many=True)
 
     class Meta:
-        model = AdventList
+        model = AdventOrder
         fields = '__all__'
 
     def populate_single_advent(self, single_advent_data):
-        single_advent_serializer = SingleAdventSerializer(data=single_advent_data)
+        single_advent_serializer = AdventSerializer(data=single_advent_data)
         single_advent_serializer.is_valid(raise_exception=True)
         single_advent = single_advent_serializer.save()
         return single_advent
@@ -74,41 +82,51 @@ class AdventListGetSerializer(serializers.ModelSerializer):
         instance.save()
 
 
-class SingleConsumptionSerializer(serializers.ModelSerializer):
+
+
+class ConsumptionSerializer(serializers.ModelSerializer):
     product = ProductSerializer
 
     class Meta:
-        model = SingleConsumption
+        model = Consumption
         fields = '__all__'
 
 
-class SingleConsumptionGetSerializer(serializers.ModelSerializer):
+class ConsumptionGetSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
 
     class Meta:
-        model = SingleConsumption
+        model = Consumption
         fields = '__all__'
 
 
-class ConsumptionListSerializer(serializers.ModelSerializer):
+class ConsumptionOrderSerializer(serializers.ModelSerializer):
     client = ClientSerializer
-    consumption = SingleConsumptionSerializer(many=True)
+    consumptions = ConsumptionSerializer(many=True)
 
     class Meta:
-        model = ConsumptionList
+        model = ConsumptionOrder
         fields = '__all__'
 
+    def create(self, validated_data):
+        consumptions_data = validated_data.pop('consumptions')
+        consumption_order = ConsumptionOrder.objects.create(**validated_data)
+        for consumption_data in consumptions_data:
+            consumption, created = Consumption.objects.get_or_create(**consumption_data)
+            consumption_order.consumptions.add(consumption)
+        return consumption_order
 
-class ConsumptionListGetSerializer(serializers.ModelSerializer):
+
+class ConsumptionOrderGetSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
-    consumption = SingleConsumptionGetSerializer(many=True)
+    consumptions = ConsumptionGetSerializer(many=True)
 
     class Meta:
-        model = ConsumptionList
+        model = ConsumptionOrder
         fields = '__all__'
 
     def populate_single_consumption(self, single_consumption_data):
-        single_consumption_serializer = SingleConsumptionSerializer(data=single_consumption_data)
+        single_consumption_serializer = ConsumptionSerializer(data=single_consumption_data)
         single_consumption_serializer.is_valid(raise_exception=True)
         single_consumption = single_consumption_serializer.save()
         return single_consumption
@@ -137,6 +155,8 @@ class ConsumptionListGetSerializer(serializers.ModelSerializer):
         instance.save()
         return self.populate(validated_data)
     
+
+
 
 class ProfitSerializer(serializers.ModelSerializer):
     

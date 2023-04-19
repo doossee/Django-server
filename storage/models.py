@@ -23,6 +23,7 @@ class Product(models.Model):
         ordering = ['id', 'name']
 
 
+
 class Client(models.Model):
 
     """Клиент"""
@@ -42,7 +43,8 @@ class Client(models.Model):
         ordering = ['id']
 
 
-class SingleAdvent(models.Model):
+
+class Advent(models.Model):
 
     """Приход"""
     
@@ -60,19 +62,18 @@ class SingleAdvent(models.Model):
         if not self.id:
             self.product.balance += self.amount
             self.product.save()
-        super(SingleAdvent, self).save(*args, **kwargs)
+        super(Advent, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Приход"
         verbose_name_plural = "Приходы"
         ordering = ['id']
 
-
-class AdventList(models.Model):
+class AdventOrder(models.Model):
 
     """Список приходов"""
 
-    advent = models.ManyToManyField(SingleAdvent, verbose_name="Приход")
+    advents = models.ManyToManyField(Advent, verbose_name="Приход")
     created_at = models.DateField("Дата прихода", auto_now_add=True, editable=False)
 
     def __str__(self) -> str:
@@ -84,7 +85,8 @@ class AdventList(models.Model):
         ordering = ['-id', '-created_at']
 
 
-class SingleConsumption(models.Model):
+
+class Consumption(models.Model):
     
     """Расход"""
 
@@ -105,15 +107,14 @@ class SingleConsumption(models.Model):
             self.cost = self.amount * self.price
             self.product.balance -= self.amount
             self.product.save()
-        super(SingleConsumption, self).save(*args, **kwargs)
+        super(Consumption, self).save(*args, **kwargs)
     
     class Meta:
         verbose_name = "Расход"
         verbose_name_plural = "Расходы"
         ordering = ['id']
 
-
-class ConsumptionList(models.Model):
+class ConsumptionOrder(models.Model):
 
     """Список расходов"""
 
@@ -122,8 +123,8 @@ class ConsumptionList(models.Model):
         on_delete=models.DO_NOTHING,
         verbose_name="Клиент"
     )
-    consumption = models.ManyToManyField(
-        SingleConsumption,
+    consumptions = models.ManyToManyField(
+        Consumption,
         verbose_name="Расход"
     )
     total_cost = models.DecimalField("Общая стоимость", max_digits=9, decimal_places=2, default=0)
@@ -136,7 +137,7 @@ class ConsumptionList(models.Model):
         if not self.id:
             self.client.debt += self.total_cost
             self.client.save()
-        super(ConsumptionList, self).save(*args, **kwargs)
+        super(ConsumptionOrder, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Список расходов"
@@ -144,6 +145,7 @@ class ConsumptionList(models.Model):
         ordering = ['-id', '-created_at']
 
     
+
 class Profit(models.Model):
     
     """Прибыль"""

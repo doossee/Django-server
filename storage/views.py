@@ -2,12 +2,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
-from .models import Product, Client, AdventList, ConsumptionList, Profit
+from .models import Product, Client, AdventOrder, ConsumptionOrder, Profit
 from .serializers import (
     ProductSerializer, 
     ClientSerializer,
-    AdventListSerializer, AdventListGetSerializer,
-    ConsumptionListSerializer, ConsumptionListGetSerializer,
+    AdventOrderSerializer, AdventOrderGetSerializer,
+    ConsumptionOrderSerializer, ConsumptionOrderGetSerializer,
     ProfitSerializer, ProfitGetSerializer
 )
 class ProductAPIViewSet(ModelViewSet):
@@ -26,24 +26,24 @@ class ClientAPIViewSet(ModelViewSet):
 
 class AdventListAPIViewSet(ModelViewSet):
 
-    queryset = AdventList.objects.all()
+    queryset = AdventOrder.objects.all()
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):
         if not self.request.method == "GET":
-            return AdventListSerializer
-        return AdventListGetSerializer
+            return AdventOrderSerializer
+        return AdventOrderGetSerializer
     
 
 class ConsumptionListAPIViewSet(ModelViewSet):
 
-    queryset = ConsumptionList.objects.all()
+    queryset = ConsumptionOrder.objects.all()
     permission_classes = [IsAdminUser]
 
     def get_serializer_class(self):
         if not self.request.method == "GET":
-            return ConsumptionListSerializer
-        return ConsumptionListGetSerializer
+            return ConsumptionOrderSerializer
+        return ConsumptionOrderGetSerializer
 
 
 class ProfitAPIViewSet(ModelViewSet):
