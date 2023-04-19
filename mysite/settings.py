@@ -47,6 +47,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         "rest_framework.permissions.IsAdminUser",
     ],
+    'DATE_FORMAT': '%d-%b-%Y',
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
