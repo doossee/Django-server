@@ -3,13 +3,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ.get('SECRET_KEY', 'cg#p$g+j9tax!#a3cup@1$8obt2_+&k3q+pmu)5%asj6yjpkag')
 
-DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['*',]
-
-CSRF_TRUSTED_ORIGINS = ['https://django-server-production-8be3.up.railway.app',]
+ALLOWED_HOSTS = ['your-app-name.herokuapp.com','127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,29 +66,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-""
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ["PGDATABASE"],
-        'USER': os.environ["PGUSER"],
-        'PASSWORD': os.environ["PGPASSWORD"],
-        'HOST': os.environ["PGHOST"],
-        'PORT': os.environ["PGPORT"],
+DATABASES = {     
+		'default': {
+      	'ENGINE': 'django.db.backends.postgresql',
+      	'HOST' : os.environ.get('POSTGRES_HOST', 'localhost'),
+      	'NAME': os.environ.get('POSTGRES_DB', 'db_name'),
+      	'USER': os.environ.get('POSTGRES_USER', 'username'),
+      	'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'password'),
+      	'PORT': os.environ.get('POSTGRES_PORT', '5432'),
     }
 }
 
-"""
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-"""
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -115,8 +102,10 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = 'static/' 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+#STATIC_URL = '/static/'
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+#STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
